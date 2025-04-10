@@ -1,0 +1,35 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+
+// Theme Colors based on the image
+$primary   : #2962FF; // A blue shade from the image
+$secondary : #00BCD4; // Teal accent color
+$accent    : #F57C00; // Orange accent for buttons/highlights
+
+$dark      : #1D1D1D; // Keep dark mode colors if needed, adjust if necessary
+$dark-page : #121212;
+
+$positive  : #4CAF50; // Green for success/active states
+$negative  : #F44336; // Red for errors or warnings
+$info      : #2196F3; // Info blue
+$warning   : #FFC107; // Warning yellow
+
+// Custom Colors
+$toolbar-bg: #FFFFFF;
+$drawer-bg : #FFFFFF;
+$page-bg   : #F4F7FC; // Light background for the main content area
+$card-bg   : #FFFFFF;
+$text-grey : #757575; // Grey text color used in the image
+$text-dark : #212121; // Darker text color
+$active-green: #10B981; // Specific green for 'Active' badge

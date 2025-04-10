@@ -1,0 +1,71 @@
+{
+  "user": {
+    "name": "Helen Voizhickl",
+    "avatar": "https://cdn.quasar.dev/img/avatar4.jpg",
+    "role": "User",
+    "position": "Head of HR Department",
+    "email": "helenvoizhickl@gmail.com",
+    "phone": "+7 (217) 255 58 43",
+    "company": "Loremipsum Group",
+    "social": {
+      "linkedin": "#",
+      "facebook": "#",
+      "twitter": "#"
+    },
+    "status": "Active"
+  },
+  "basicInfo": {
+    "hireDate": "August, 28, 2015",
+    "workedFor": "7 years, 1 month",
+    "employeeId": "3156",
+    "ssn": "XXX-XX-3561"
+  },
+  "personalInfo": {
+    "birthDate": "12/12/85",
+    "address": "3514 Cresentview Lane",
+    "address2": "Street 2",
+    "city": "West Jordan",
+    "state": "Co"
+  },
+  "occupationInfo": {
+    "type": "Full-Time",
+    "department": "Engineering",
+    "location": "Seattle, WA"
+  },
+  "sidebarLinks": [
+    { "title": "Profile", "icon": "person", "link": "#" },
+    { "title": "Job", "icon": "work", "link": "#" },
+    { "title": "Salary Details", "icon": "payments", "link": "#" },
+    { "title": "Time Off", "icon": "hourglass_empty", "link": "#" },
+    { "title": "Documents", "icon": "description", "link": "#" },
+    { "title": "Training", "icon": "model_training", "link": "#" },
+    { "title": "Benefits", "icon": "favorite_border", "link": "#" }
+  ],
+  "upcomingEvents": [
+    {
+      "title": "Design review",
+      "time": "9:00 AM - 10:00 AM",
+      "attendees": [
+        "https://cdn.quasar.dev/img/avatar1.jpg",
+        "https://cdn.quasar.dev/img/avatar2.jpg",
+        "https://cdn.quasar.dev/img/avatar3.jpg"
+      ],
+      "color": "blue-5"
+    },
+     {
+      "title": "Design review",
+      "time": "11:00 AM - 12:00 PM",
+      "attendees": [
+        "https://cdn.quasar.dev/img/avatar5.jpg",
+        "https://cdn.quasar.dev/img/avatar6.jpg"
+      ],
+      "color": "purple-5"
+    }
+  ],
+  "onboardingTasks": [
+    { "id": 1, "task": "Prepare workspace, software, access", "assignedTo": "Jim Jones", "avatar": "https://cdn.quasar.dev/img/avatar1.jpg", "dueDate": "07/26/2020", "attachments": null, "completed": true },
+    { "id": 2, "task": "Meeting with HR manager", "assignedTo": "Jim Jones", "avatar": "https://cdn.quasar.dev/img/avatar1.jpg", "dueDate": "07/26/2020", "attachments": "meeting#1.zip", "completed": false },
+    { "id": 3, "task": "Office tour for employee", "assignedTo": "Sara Smith", "avatar": "https://cdn.quasar.dev/img/avatar2.jpg", "dueDate": "07/26/2020", "attachments": null, "completed": false },
+    { "id": 4, "task": "Company vision", "assignedTo": "Sara Smith", "avatar": "https://cdn.quasar.dev/img/avatar2.jpg", "dueDate": "07/26/2020", "attachments": "company.zip", "completed": false }
+  ]
+}

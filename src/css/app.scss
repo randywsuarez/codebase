@@ -1,0 +1,67 @@
+// app global css in SCSS form
+
+body {
+  font-family: 'Roboto', sans-serif; // Ensure Roboto font is used
+}
+
+.main-layout-gradient {
+  background: linear-gradient(to bottom right, #3A86FF, #004AAD); // Blue gradient background
+}
+
+.text-medium-dark {
+  color: #424242; // A medium dark text color
+}
+
+.text-light-grey {
+  color: #B0BEC5; // Lighter grey for captions/subtitles
+}
+
+.q-card {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+.q-item__section--avatar {
+  min-width: 40px; // Adjust avatar section width if needed
+}
+
+.active-badge {
+  background-color: $active-green;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.onboarding-table .q-chip {
+  background-color: #E0E0E0 !important; // Grey background for chips in table
+  color: #616161 !important; // Darker text for chips
+}
+
+.q-date {
+  border: none;
+  box-shadow: none;
+}
+
+.q-date__header {
+ background-color: transparent !important;
+ color: $text-dark !important;
+}
+
+.q-date__view {
+  padding: 0 !important;
+}
+
+.q-date__navigation button .q-icon {
+  color: $primary !important;
+}
+
+.q-date__calendar-item button {
+  border-radius: 50% !important;
+}
+
+.q-date__calendar-item--today button {
+  background-color: $primary;
+  color: white;
+}
