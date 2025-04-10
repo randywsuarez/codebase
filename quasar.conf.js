@@ -35,7 +35,7 @@ module.exports = function (/* ctx */) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-      'fontawesome-v5', // Changed to v5 to match fab icons used
+      // 'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -84,23 +84,7 @@ module.exports = function (/* ctx */) {
     framework: {
       iconSet: 'material-icons', // Quasar icon set
       lang: 'en-us', // Quasar language pack
-      config: {
-        brand: { // Add brand colors here to use them easily in components
-          primary: '#2962FF',
-          secondary: '#00BCD4',
-          accent: '#F57C00',
-          dark: '#1D1D1D',
-          positive: '#4CAF50',
-          negative: '#F44336',
-          info: '#2196F3',
-          warning: '#FFC107',
-          'page-bg': '#F4F7FC',
-          'card-bg': '#FFFFFF',
-          'text-grey': '#757575',
-          'text-dark': '#212121',
-          'active-green': '#10B981'
-        }
-      },
+      config: {},
 
       // Possible values for "importStrategy":
       // * 'auto' - (DEFAULT) Auto-import needed Quasar components & directives
@@ -115,7 +99,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify'] // Added Notify plugin as an example, might be useful
+      plugins: []
     },
 
     // animations: 'all', // --- includes all animations
