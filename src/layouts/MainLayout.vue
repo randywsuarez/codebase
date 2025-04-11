@@ -81,7 +81,7 @@
              </q-btn>
              <!-- Settings Button with Menu -->
              <q-btn round dense flat color="grey-8" icon="settings">
-               <q-menu anchor="bottom right" self="top right">
+               <q-menu anchor="bottom right" self="top right" transition-show="flip-up" transition-hide="flip-down">
                  <q-list style="min-width: 150px">
                    <q-item>
                      <q-item-section>
@@ -90,17 +90,10 @@
                    </q-item>
                    <q-item dense>
                      <q-item-section>
-                       <q-select
-                         v-model="selectedLanguage"
-                         :options="languageOptions"
-                         dense
-                         borderless
-                         emit-value
-                         map-options
-                         options-dense
-                         style="min-width: 120px;"
-                         @update:model-value="changeLanguage"
-                       />
+                      <q-btn-group spread>
+                        <q-btn flat dense @click="changeLanguage('en-us')" icon="flag:us" :label="$t('english')" />
+                        <q-btn flat dense @click="changeLanguage('es')" icon="flag:es" :label="$t('spanish')" />
+                      </q-btn-group>
                      </q-item-section>
                    </q-item>
                    <!-- Add other settings options here -->
@@ -124,6 +117,8 @@ import profileData from 'src/data/profileData.json'
 // Import getCurrentInstance from vue
 import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
 import { date } from 'quasar' // Import Quasar date utility
+import langEnUS from 'quasar/lang/en-us' // Adjusted import path
+import langEsES from 'quasar/lang/es'   // Adjusted import path
 
 export default {
   name: 'MainLayout',
@@ -139,27 +134,26 @@ export default {
 
     // Language selection setup
     // Initialize with current locale from the $i18n instance
-    const selectedLanguage = ref($i18n.locale)
+    // Using 'en-us' and 'es' to match imported language packs
+    const selectedLanguage = ref($i18n.locale === 'es-ES' ? 'es' : 'en-us')
     const languageOptions = ref([
-      { label: 'English', value: 'en-us' },
-      { label: 'Español', value: 'es-es' }
+      { label: 'english', value: 'en-us' }, // Match language pack code
+      { label: 'spanish', value: 'es' }    // Match language pack code
     ])
 
     // Function to change language
     const changeLanguage = (lang) => {
-      $i18n.locale = lang // Update the i18n locale directly
+      // Determine the i18n locale based on the Quasar lang code
+      const i18nLocale = lang === 'es' ? 'es-ES' : 'en-US';
+      $i18n.locale = i18nLocale // Update the i18n locale
+
       // Use the $q instance obtained from getCurrentInstance
       if ($q && $q.lang) {
-         // Attempt to load the Quasar language pack dynamically
-         import(
-           /* webpackChunkName: "lang-[request]" */
-           `quasar/lang/${lang}`
-         ).then(langPack => {
-           $q.lang.set(langPack.default)
-           console.log('Quasar language pack set to:', lang);
-         }).catch(err => {
-            console.error('Failed to load Quasar language pack:', err);
-         })
+        if (lang === 'en-us') {
+          $q.lang.set(langEnUS)
+        } else if (lang === 'es') {
+          $q.lang.set(langEsES)
+        }
       } else {
          console.warn('Could not set Quasar language pack ($q or $q.lang not available).');
       }
@@ -171,6 +165,7 @@ export default {
       // This should force the child component to re-render.
       // If this doesn't work, the next step might be instance.proxy.$forceUpdate()
       // instance.proxy.$forceUpdate(); // Uncomment this as a last resort
+       selectedLanguage.value = lang
     }
 
     // Function to update the date and time
@@ -184,11 +179,21 @@ export default {
       updateDateTime() // Initial update
       timerId = setInterval(updateDateTime, 1000) // Update every second
 
+      // Initialize Quasar language pack based on the current i18n locale
+      const initialQuasarLang = $i18n.locale === 'es-ES' ? 'es' : 'en-us'
+      changeLanguage(initialQuasarLang)
+      selectedLanguage.value = initialQuasarLang
+
       // Optionally: Load language preference from localStorage
       // const savedLang = localStorage.getItem('userLanguage')
       // if (savedLang && languageOptions.value.some(opt => opt.value === savedLang)) {
       //   changeLanguage(savedLang)
       //   selectedLanguage.value = savedLang
+      // }
+
+      // Ensure selectedLanguage is initialized with the current locale
+      // if (!selectedLanguage.value) {
+      //   selectedLanguage.value = initialQuasarLang
       // }
     })
 
