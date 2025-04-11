@@ -3,5 +3,11 @@
 
 export default {
   failed: 'Action failed',
-  success: 'Action was successful'
+  success: 'Action was successful',
+  viewProfile: 'View Profile',
+  profile: 'Profile',
+  settings: 'Settings',
+  help: 'Help',
+  logout: 'Logout',
+  language: 'Language' // Added language key
 }
