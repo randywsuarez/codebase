@@ -19,7 +19,7 @@
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-weight-bold text-medium-dark">{{ profileData.user.name }}</q-item-label>
-              <q-item-label caption>{{ $t('viewProfile') }}</q-item-label> <!-- Use translation -->
+              <q-item-label caption>{{ $t('viewProfile') }}</q-item-label>
             </q-item-section>
              <q-item-section side>
                <q-icon name="expand_more" />
@@ -29,23 +29,58 @@
           <q-separator class="q-my-md" />
 
           <!-- Navigation Links -->
-          <q-item
-            v-for="link in profileData.sidebarLinks"
-            :key="link.title"
-            clickable
-            v-ripple
-            :active="link.title === 'Profile'"
-            active-class="text-primary"
-            class="q-py-sm"
-          >
-            <q-item-section avatar>
-              <q-icon :name="link.icon" />
-            </q-item-section>
-            <q-item-section>
-              <!-- Use translation for link titles if available -->
-              <q-item-label class="text-weight-medium">{{ $t(link.title.toLowerCase()) || link.title }}</q-item-label>
-            </q-item-section>
-          </q-item>
+          <template v-for="link in menuLinks">
+            <!-- Regular Menu Item -->
+            <q-item
+              v-if="!link.children"
+              :key="link.title"
+              clickable
+              v-ripple
+              :to="link.link"
+              :active="isActive(link.link)"
+              active-class="text-primary active-item"
+              class="q-py-sm"
+            >
+              <q-item-section avatar>
+                <q-icon :name="link.icon" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-weight-medium">{{ $t(link.title.toLowerCase().replace(/ /g, '')) || link.title }}</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <!-- Expandable Menu Item -->
+            <q-expansion-item
+              v-else
+              :key="link.title"
+              :icon="link.icon"
+              :label="$t(link.title.toLowerCase().replace(/ /g, '')) || link.title"
+              :header-inset-level="0"
+              :content-inset-level="0.5"
+              expand-separator
+              class="text-weight-medium"
+              v-model="expansionState[link.title]" 
+            >
+              <!-- Sub-Items -->
+              <q-item
+                v-for="child in link.children"
+                :key="child.title"
+                clickable
+                v-ripple
+                :to="child.link"
+                :active="isActive(child.link)"
+                active-class="text-primary active-item"
+                class="q-py-sm q-pl-lg"
+              >
+                <q-item-section avatar>
+                  <q-icon :name="child.icon" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-weight-regular">{{ $t(child.title.toLowerCase().replace(/ /g, '')) || child.title }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-expansion-item>
+          </template>
 
           <!-- Placeholder for bottom graphic -->
            <div class="q-pa-md absolute-bottom">
@@ -85,18 +120,17 @@
                  <q-list style="min-width: 150px">
                    <q-item>
                      <q-item-section>
-                       <q-item-label>{{ $t('language') }}</q-item-label> <!-- Use translation -->
+                       <q-item-label>{{ $t('language') }}</q-item-label>
                      </q-item-section>
                    </q-item>
                    <q-item dense>
                      <q-item-section>
                       <q-btn-group spread>
-                        <q-btn flat dense @click="changeLanguage('en-us')" icon="flag:us" :label="$t('english')" />
+                        <q-btn flat dense @click="changeLanguage('en-us')" icon="flag:us" :label="$t('english')" /> 
                         <q-btn flat dense @click="changeLanguage('es')" icon="flag:es" :label="$t('spanish')" />
                       </q-btn-group>
                      </q-item-section>
                    </q-item>
-                   <!-- Add other settings options here -->
                  </q-list>
                </q-menu>
              </q-btn>
@@ -105,112 +139,95 @@
          </q-toolbar>
        </q-header>
 
-       <!-- Main Content -->
-       <!-- Add :key to force re-render on locale change -->
-      <router-view :key="$i18n.locale" />
+       <router-view :key="$route.fullPath" /> 
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
 import profileData from 'src/data/profileData.json'
-// Import getCurrentInstance from vue
-import { ref, onMounted, onUnmounted, getCurrentInstance } from 'vue'
-import { date } from 'quasar' // Import Quasar date utility
-import langEnUS from 'quasar/lang/en-us' // Adjusted import path
-import langEsES from 'quasar/lang/es'   // Adjusted import path
+import menuLinks from 'src/data/menu.json'
+import { date } from 'quasar'
+import langEnUS from 'quasar/lang/en-us' 
+import langEsES from 'quasar/lang/es'   
 
 export default {
   name: 'MainLayout',
-  setup () {
-    // Get the component instance to access $q and $i18n
-    const instance = getCurrentInstance()
-    const $q = instance.proxy.$q // Access $q via the instance proxy
-    const $i18n = instance.proxy.$i18n // Access $i18n via the instance proxy
-
-    const leftDrawerOpen = ref(false)
-    const currentDateTime = ref('')
-    let timerId = null
-
-    // Language selection setup
-    // Initialize with current locale from the $i18n instance
-    // Using 'en-us' and 'es' to match imported language packs
-    const selectedLanguage = ref($i18n.locale === 'es-ES' ? 'es' : 'en-us')
-    const languageOptions = ref([
-      { label: 'english', value: 'en-us' }, // Match language pack code
-      { label: 'spanish', value: 'es' }    // Match language pack code
-    ])
-
-    // Function to change language
-    const changeLanguage = (lang) => {
-      // Determine the i18n locale based on the Quasar lang code
-      const i18nLocale = lang === 'es' ? 'es-ES' : 'en-US';
-      $i18n.locale = i18nLocale // Update the i18n locale
-
-      // Use the $q instance obtained from getCurrentInstance
-      if ($q && $q.lang) {
-        if (lang === 'en-us') {
-          $q.lang.set(langEnUS)
-        } else if (lang === 'es') {
-          $q.lang.set(langEsES)
-        }
-      } else {
-         console.warn('Could not set Quasar language pack ($q or $q.lang not available).');
-      }
-      console.log('Language changed to:', lang) // For debugging
-      // Optionally: Store preference in localStorage
-      // localStorage.setItem('userLanguage', lang)
-
-      // NOTE: We added :key="$i18n.locale" to <router-view> in the template
-      // This should force the child component to re-render.
-      // If this doesn't work, the next step might be instance.proxy.$forceUpdate()
-      // instance.proxy.$forceUpdate(); // Uncomment this as a last resort
-       selectedLanguage.value = lang
-    }
-
-    // Function to update the date and time
-    const updateDateTime = () => {
-      const timeStamp = Date.now()
-      currentDateTime.value = date.formatDate(timeStamp, 'MMMM D, YYYY, h:mm:ss A')
-    }
-
-    // Update time immediately and then every second
-    onMounted(() => {
-      updateDateTime() // Initial update
-      timerId = setInterval(updateDateTime, 1000) // Update every second
-
-      // Initialize Quasar language pack based on the current i18n locale
-      const initialQuasarLang = $i18n.locale === 'es-ES' ? 'es' : 'en-us'
-      changeLanguage(initialQuasarLang)
-      selectedLanguage.value = initialQuasarLang
-
-      // Optionally: Load language preference from localStorage
-      // const savedLang = localStorage.getItem('userLanguage')
-      // if (savedLang && languageOptions.value.some(opt => opt.value === savedLang)) {
-      //   changeLanguage(savedLang)
-      //   selectedLanguage.value = savedLang
-      // }
-
-      // Ensure selectedLanguage is initialized with the current locale
-      // if (!selectedLanguage.value) {
-      //   selectedLanguage.value = initialQuasarLang
-      // }
-    })
-
-    // Clear the interval when the component is unmounted
-    onUnmounted(() => {
-      if (timerId) {
-        clearInterval(timerId)
-      }
-    })
-
+  data () {
     return {
-      leftDrawerOpen,
-      profileData,
-      currentDateTime,
-      selectedLanguage,
-      languageOptions,
-      changeLanguage // Expose changeLanguage function
+      leftDrawerOpen: false,
+      currentDateTime: '',
+      timerId: null,
+      profileData: profileData, 
+      menuLinks: menuLinks,    
+      selectedLanguage: this.$i18n.locale === 'es-ES' ? 'es' : 'en-us', 
+      languageOptions: [
+        { label: 'english', value: 'en-us' }, 
+        { label: 'spanish', value: 'es' }    
+      ],
+      expansionState: {} 
+    }
+  },
+  computed: {
+    quasarLangPack () {
+      return this.selectedLanguage === 'es' ? langEsES : langEnUS;
+    }
+  },
+  methods: {
+    isActive (linkPath) {
+      if (!linkPath || linkPath === '#') return false;
+      const targetPath = linkPath.startsWith('#') ? linkPath.substring(1) : linkPath;
+      // Use base path comparison for Vue Router 3
+      return this.$route.path === ('/' + targetPath) || this.$route.path.startsWith('/' + targetPath + '/');
+    },
+    isParentActive (parentLink) {
+      if (!parentLink.children) return false;
+      return parentLink.children.some(child => this.isActive(child.link));
+    },
+    changeLanguage (lang) {
+      const i18nLocale = lang === 'es' ? 'es-ES' : 'en-US';
+      this.$i18n.locale = i18nLocale
+      this.$q.lang.set(this.quasarLangPack)
+      this.selectedLanguage = lang
+    },
+    updateDateTime () {
+      const timeStamp = Date.now()
+      this.currentDateTime = date.formatDate(timeStamp, 'MMMM D, YYYY, h:mm:ss A')
+    },
+    initializeExpansionState() {
+      const newState = {};
+      this.menuLinks.forEach(link => {
+        if (link.children) {
+          newState[link.title] = this.isParentActive(link);
+        }
+      });
+      // Use Vue.set to ensure reactivity for new properties in Vue 2
+      this.$set(this, 'expansionState', newState);
+    }
+  },
+  watch: {
+    '$i18n.locale': function (newLocale) {
+      const langCode = newLocale === 'es-ES' ? 'es' : 'en-us';
+      this.selectedLanguage = langCode;
+      this.$q.lang.set(this.quasarLangPack);
+    },
+    '$route': {
+      immediate: true, // Run the handler immediately on component creation
+      handler() {
+        this.initializeExpansionState();
+      }
+    }
+  },
+  mounted () {
+    this.updateDateTime()
+    this.timerId = setInterval(this.updateDateTime, 1000)
+    this.$q.lang.set(this.quasarLangPack);
+    // Initialization now handled by the immediate watcher for $route
+    // this.initializeExpansionState(); 
+  },
+  beforeDestroy () {
+    if (this.timerId) {
+      clearInterval(this.timerId)
     }
   }
 }
@@ -218,20 +235,39 @@ export default {
 
 <style lang="scss">
 .q-drawer {
-  border-right: none !important; // Remove border if drawer bg is white
+  border-right: none !important;
 }
-.q-item.q-router-link--active, .q-item--active {
+
+.active-item {
   color: $primary !important;
   background-color: rgba($primary, 0.1);
   border-left: 3px solid $primary;
 }
-.q-item__section--avatar {
-  min-width: 45px; // Adjust icon alignment
+
+.q-expansion-item__container > .q-item {
+  font-weight: 500; 
 }
 
-/* Style for the language dropdown */
+.q-expansion-item--expanded > .q-item {
+
+}
+
+.q-expansion-item__content .q-item.active-item {
+  font-weight: 500; 
+  padding-left: 1.5rem !important; 
+}
+
+.q-expansion-item__content .q-item {
+    font-weight: 400; 
+    padding-left: 1.5rem !important; 
+}
+
+.q-item__section--avatar {
+  min-width: 45px;
+}
+
 .q-menu .q-select .q-field__native,
 .q-menu .q-select .q-field__input {
-  padding-left: 8px; /* Adjust padding if needed */
+  padding-left: 8px;
 }
 </style>

@@ -32,15 +32,6 @@
     "department": "Engineering",
     "location": "Seattle, WA"
   },
-  "sidebarLinks": [
-    { "title": "Profile", "icon": "person", "link": "#" },
-    { "title": "Job", "icon": "work", "link": "#" },
-    { "title": "Salary Details", "icon": "payments", "link": "#" },
-    { "title": "Time Off", "icon": "hourglass_empty", "link": "#" },
-    { "title": "Documents", "icon": "description", "link": "#" },
-    { "title": "Training", "icon": "model_training", "link": "#" },
-    { "title": "Benefits", "icon": "favorite_border", "link": "#" }
-  ],
   "upcomingEvents": [
     {
       "title": "Design review",

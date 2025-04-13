@@ -11,8 +11,8 @@ export default {
   logout: 'Cerrar Sesión',
   language: 'Idioma',
   job: 'Puesto',
-  'salary details': 'Detalles de Salario',
-  'time off': 'Tiempo Libre',
+  salarydetails: 'Detalles de Salario',
+  timeoff: 'Tiempo Libre',
   documents: 'Documentos',
   training: 'Capacitación',
   benefits: 'Beneficios',
@@ -43,5 +43,10 @@ export default {
   actions: 'Acciones',
   addNewTask: 'Agregar nueva tarea',
   english: 'Inglés',
-  spanish: 'Español'
+  spanish: 'Español',
+  // New keys
+  setting: 'Configuración', // Added Spanish translation for Setting
+  roles: 'Roles',
+  user: 'Usuario',
+  userroles: 'Roles de Usuario'
 }

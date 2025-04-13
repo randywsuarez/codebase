@@ -11,8 +11,8 @@ export default {
   logout: 'Logout',
   language: 'Language',
   job: 'Job',
-  'salary details': 'Salary Details',
-  'time off': 'Time Off',
+  salarydetails: 'Salary Details',
+  timeoff: 'Time Off',
   documents: 'Documents',
   training: 'Training',
   benefits: 'Benefits',
@@ -43,5 +43,10 @@ export default {
   actions: 'Actions',
   addNewTask: 'Add New Task',
   english: 'English',
-  spanish: 'Spanish'
+  spanish: 'Spanish',
+  // New keys
+  setting: 'Setting',
+  roles: 'Roles',
+  user: 'User',
+  userroles: 'User Roles'
 }

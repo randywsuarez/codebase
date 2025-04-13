@@ -1,0 +1,18 @@
+[
+    { "title": "Profile", "icon": "person", "link": "#" },
+    { "title": "Job", "icon": "work", "link": "#" },
+    { "title": "Salary Details", "icon": "payments", "link": "#" },
+    { "title": "Time Off", "icon": "hourglass_empty", "link": "#" },
+    { "title": "Documents", "icon": "description", "link": "#" },
+    { "title": "Training", "icon": "model_training", "link": "#" },
+    { "title": "Benefits", "icon": "favorite_border", "link": "#" },
+    {
+      "title": "Setting",
+      "icon": "settings",
+      "children": [
+        { "title": "Roles", "icon": "admin_panel_settings", "link": "/roles" },
+        { "title": "User", "icon": "manage_accounts", "link": "/user" },
+        { "title": "User Roles", "icon": "group", "link": "/user-roles" }
+      ]
+    }
+  ]
