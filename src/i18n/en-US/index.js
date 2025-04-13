@@ -48,5 +48,11 @@ export default {
   setting: 'Setting',
   roles: 'Roles',
   user: 'User',
-  userroles: 'User Roles'
+  userroles: 'User Roles',
+  location: 'Location',
+  project: 'Project',
+  dashboard: 'Dashboard',
+  locations: 'Locations',
+  projects: 'Projects',
+  users: 'Users'
 }

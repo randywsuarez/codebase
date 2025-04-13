@@ -2,22 +2,22 @@
   <q-page padding>
     <q-card>
       <q-card-section>
-        <div class="text-h6">{{ $t('users') }} Management</div>
+        <div class="text-h6">{{ $t('locations') }} Management</div>
       </q-card-section>
 
       <q-card-section>
         <q-btn
           color="primary"
           icon="add"
-          label="Create User"
+          label="Create Location"
           @click="openCreateDialog"
         />
       </q-card-section>
 
       <q-card-section>
         <q-table
-          title="Users"
-          :rows="users"
+          title="Locations"
+          :rows="locations"
           :columns="columns"
           row-key="id"
           :loading="loading"
@@ -38,7 +38,7 @@
                 dense
                 color="red"
                 icon="delete"
-                @click="deleteUser(props.row)"
+                @click="deleteLocation(props.row)"
               />
             </q-td>
           </template>
@@ -49,17 +49,16 @@
     <q-dialog v-model="createDialog">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Create User</div>
+          <div class="text-h6">Create Location</div>
         </q-card-section>
 
         <q-card-section>
-          <q-input v-model="newUser.username" label="Username" />
-          <q-input v-model="newUser.email" label="Email" />
+          <q-input v-model="newLocation.name" label="Location Name" />
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn label="Create" color="primary" @click="createUser" />
+          <q-btn label="Create" color="primary" @click="createLocation" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -67,17 +66,16 @@
     <q-dialog v-model="editDialog">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Edit User</div>
+          <div class="text-h6">Edit Location</div>
         </q-card-section>
 
         <q-card-section>
-          <q-input v-model="editingUser.username" label="Username" />
-          <q-input v-model="editingUser.email" label="Email" />
+          <q-input v-model="editingLocation.name" label="Location Name" />
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn flat label="Cancel" color="primary" v-close-popup />
-          <q-btn label="Update" color="primary" @click="updateUser" />
+          <q-btn label="Update" color="primary" @click="updateLocation" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -86,78 +84,75 @@
 
 <script>
 export default {
-  name: 'UserPage',
+  name: 'LocationsPage',
   data() {
     return {
       loading: false,
-      users: [],
+      locations: [],
       columns: [
-        { name: 'username', label: 'Username', field: 'username', align: 'left', sortable: true },
-        { name: 'email', label: 'Email', field: 'email', align: 'left', sortable: true },
+        { name: 'name', label: 'Name', field: 'name', align: 'left', sortable: true },
         { name: 'actions', label: 'Actions', align: 'center' },
       ],
       createDialog: false,
       editDialog: false,
-      newUser: {
-        username: '',
-        email: '',
+      newLocation: {
+        name: '',
       },
-      editingUser: {
+      editingLocation: {
         id: null,
-        username: '',
-        email: '',
+        name: '',
       },
     };
   },
   mounted() {
-    this.loadUsers();
+    this.loadLocations();
   },
   methods: {
-    async loadUsers() {
+    async loadLocations() {
       this.loading = true;
       try {
-        await this.$store.dispatch('users/loadUsers');
-        this.users = this.$store.state.users.users;
+        await this.$store.dispatch('locations/loadLocations');
+        this.locations = this.$store.state.locations.locations;
       } catch (error) {
-        console.error('Error loading users:', error);
+        console.error('Error loading locations:', error);
       } finally {
         this.loading = false;
       }
     },
     openCreateDialog() {
-      this.newUser = { username: '', email: '' };
+      this.newLocation = { name: '' };
       this.createDialog = true;
     },
-    openEditDialog(user) {
-      this.editingUser = { ...user };
+    openEditDialog(location) {
+      this.editingLocation = { ...location };
       this.editDialog = true;
     },
-    async createUser() {
+    async createLocation() {
       try {
-        await this.$store.dispatch('users/createUser', this.newUser);
+        await this.$store.dispatch('locations/createLocation', this.newLocation);
         this.createDialog = false;
-        this.newUser = { username: '', email: '' };
-        await this.loadUsers();
+        this.newLocation = { name: '' };
+        await this.loadLocations();
       } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('Error creating location:', error);
       }
     },
-    async updateUser() {
+    async updateLocation() {
       try {
-        await this.$store.dispatch('users/updateUser', this.editingUser);
+        await this.$store.dispatch('locations/updateLocation', this.editingLocation);
         this.editDialog = false;
-        this.editingUser = { id: null, username: '', email: '' };
-        await this.loadUsers();
+        this.editingLocation = { id: null, name: '' };
+        await this.loadLocations();
       } catch (error) {
-        console.error('Error updating user:', error);
+        console.error('Error updating location:', error);
       }
     },
-    async deleteUser(user) {
+    async deleteLocation(location) {
       try {
-        await this.$store.dispatch('users/deleteUser', user.id);
-        await this.loadUsers();
+        await this.$store.dispatch('locations/deleteLocation', location.id);
+        await this.loadLocations();
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('Error deleting location:', error);
       }
     },
   },

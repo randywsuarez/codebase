@@ -1,0 +1,14 @@
+[
+  {
+    "id": "loc1",
+    "name": "Oficina Central"
+  },
+  {
+    "id": "loc2",
+    "name": "Sucursal Norte"
+  },
+  {
+    "id": "loc3",
+    "name": "Almacén Principal"
+  }
+]

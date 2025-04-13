@@ -1,0 +1,71 @@
+[
+  {
+    "id": "admin",
+    "name": "Administrator",
+    "description": "Full access to all modules and settings.",
+    "permissions": {
+      "profile": ["create", "read", "update", "delete"],
+      "job": ["create", "read", "update", "delete"],
+      "salaryDetails": ["create", "read", "update", "delete"],
+      "timeOff": ["create", "read", "update", "delete"],
+      "documents": ["create", "read", "update", "delete"],
+      "training": ["create", "read", "update", "delete"],
+      "benefits": ["create", "read", "update", "delete"],
+      "settings": {
+        "roles": ["create", "read", "update", "delete"],
+        "users": ["create", "read", "update", "delete"],
+        "userRoles": ["create", "read", "update", "delete"]
+      }
+    },
+    "appliesTo": { 
+       "locations": ["*"],
+       "projects": ["*"]
+     }
+  },
+  {
+    "id": "editor",
+    "name": "Editor",
+    "description": "Can view and edit most data, but cannot manage users or roles.",
+    "permissions": {
+      "profile": ["read", "update"],
+      "job": ["read", "update"],
+      "salaryDetails": ["read"],
+      "timeOff": ["read", "update"],
+      "documents": ["create", "read", "update"],
+      "training": ["read", "update"],
+      "benefits": ["read"],
+      "settings": {
+        "roles": ["read"],
+        "users": ["read"],
+        "userRoles": ["read"]
+      }
+    },
+     "appliesTo": {
+       "locations": ["*"],
+       "projects": ["*"]
+     }
+  },
+  {
+    "id": "viewer",
+    "name": "Viewer",
+    "description": "Read-only access to most data.",
+    "permissions": {
+      "profile": ["read"],
+      "job": ["read"],
+      "salaryDetails": ["read"],
+      "timeOff": ["read"],
+      "documents": ["read"],
+      "training": ["read"],
+      "benefits": ["read"],
+      "settings": {
+        "roles": ["read"],
+        "users": ["read"],
+        "userRoles": ["read"]
+      }
+    },
+    "appliesTo": {
+       "locations": ["*"],
+       "projects": ["*"]
+     }
+  }
+]

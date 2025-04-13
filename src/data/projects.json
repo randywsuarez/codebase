@@ -1,0 +1,27 @@
+[
+  {
+    "id": "projA",
+    "name": "Desarrollo Core",
+    "locationId": "loc1"
+  },
+  {
+    "id": "projB",
+    "name": "Campaña Marketing Q1",
+    "locationId": "loc1"
+  },
+  {
+    "id": "projC",
+    "name": "Inventario Anual",
+    "locationId": "loc2"
+  },
+   {
+    "id": "projD",
+    "name": "Logística Saliente",
+    "locationId": "loc2"
+  },
+  {
+    "id": "projE",
+    "name": "Recepción Mercancía",
+    "locationId": "loc3"
+  }
+]

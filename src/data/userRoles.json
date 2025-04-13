@@ -1,0 +1,39 @@
+[
+  // User1: Super Admin - Acceso total a todas las locaciones y proyectos
+  {
+    "userId": "user1",
+    "roleId": "admin",
+    "locationId": "*", // Todas las locaciones
+    "projectId": "*"  // Todos los proyectos
+  },
+
+  // User2: Editor - Acceso a todos los proyectos en loc1
+  {
+    "userId": "user2",
+    "roleId": "editor",
+    "locationId": "loc1",
+    "projectId": "*" // Todos los proyectos dentro de loc1
+  },
+  // User2: Editor - Acceso solo a proyectos específicos projB y projD en loc2
+  {
+    "userId": "user2",
+    "roleId": "editor",
+    "locationId": "loc2",
+    "projectId": ["projB", "projD"] // Solo proyectos B y D en loc2
+  },
+
+  // User3: Viewer - Acceso solo al proyecto projC en la locación loc2
+  {
+    "userId": "user3",
+    "roleId": "viewer",
+    "locationId": "loc2",
+    "projectId": "projC" // Solo proyecto C en loc2
+  },
+   // User3: Viewer - También tiene acceso a todos los proyectos en loc3
+  {
+    "userId": "user3",
+    "roleId": "viewer",
+    "locationId": "loc3",
+    "projectId": "*" // Todos los proyectos en loc3
+  }
+]

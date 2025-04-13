@@ -48,5 +48,11 @@ export default {
   setting: 'Configuración', // Added Spanish translation for Setting
   roles: 'Roles',
   user: 'Usuario',
-  userroles: 'Roles de Usuario'
+  userroles: 'Roles de Usuario',
+  location: 'Locación',
+  project: 'Proyecto',
+   dashboard: 'Tablero',
+  locations: 'Locaciones',
+  projects: 'Proyectos',
+  users: 'Usuarios'
 }
