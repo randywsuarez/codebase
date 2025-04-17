@@ -54,5 +54,7 @@ export default {
    dashboard: 'Tablero',
   locations: 'Locaciones',
   projects: 'Proyectos',
-  users: 'Usuarios'
+  users: 'Usuarios',
+  edit: 'Editar', // Added
+  delete: 'Eliminar' // Added
 }

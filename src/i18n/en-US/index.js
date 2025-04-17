@@ -54,5 +54,7 @@ export default {
   dashboard: 'Dashboard',
   locations: 'Locations',
   projects: 'Projects',
-  users: 'Users'
+  users: 'Users',
+  edit: 'Edit', // Added
+  delete: 'Delete' // Added
 }

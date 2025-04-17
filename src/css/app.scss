@@ -2,6 +2,11 @@
 
 body {
   font-family: 'Roboto', sans-serif; // Ensure Roboto font is used
+  // Add a background image or gradient to the body for the blur effect to work against
+  background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  // Or uncomment the line below for an image background
+  // background: url('/path/to/your/background-image.jpg') no-repeat center center fixed;
+  // background-size: cover;
 }
 
 .main-layout-gradient {
@@ -16,9 +21,41 @@ body {
   color: #B0BEC5; // Lighter grey for captions/subtitles
 }
 
+// Glassmorphism Base Styles
+.glassy {
+  background: rgba(255, 255, 255, 0.3); // Semi-transparent white background
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); // For Safari
+  border-radius: 12px !important; // Slightly larger border radius
+  border: 1px solid rgba(255, 255, 255, 0.18); // Subtle white border
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); // Soft shadow
+}
+
+// Apply glassmorphism to common Quasar components
 .q-card {
-  border-radius: 8px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+  @extend .glassy;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1), 0 2px 12px rgba(0, 0, 0, 0.06) !important; // Combine shadows if needed
+}
+
+.q-toolbar {
+   @extend .glassy;
+   // Override default toolbar background
+   background: rgba(255, 255, 255, 0.25) !important;
+}
+
+.q-header {
+  background: transparent !important; // Make header transparent to see effect
+  box-shadow: none !important; // Remove default header shadow
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); // Optional subtle border
+}
+
+.q-drawer {
+  @extend .glassy;
+  background: rgba(255, 255, 255, 0.2) !important; // Slightly different transparency for drawer
+}
+
+.q-dialog .q-card {
+    @extend .glassy; // Ensure dialogs are glassy too
 }
 
 .q-item__section--avatar {
@@ -39,9 +76,12 @@ body {
   color: #616161 !important; // Darker text for chips
 }
 
+// Style date picker for consistency (optional, adjust as needed)
 .q-date {
+  @extend .glassy;
   border: none;
   box-shadow: none;
+  background: rgba(255, 255, 255, 0.35) !important;
 }
 
 .q-date__header {
@@ -51,6 +91,7 @@ body {
 
 .q-date__view {
   padding: 0 !important;
+  background-color: transparent !important;
 }
 
 .q-date__navigation button .q-icon {
@@ -65,3 +106,6 @@ body {
   background-color: $primary;
   color: white;
 }
+
+// You might need to adjust specific component styles further
+// depending on your exact needs and the components you use.

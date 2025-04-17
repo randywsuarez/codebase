@@ -19,7 +19,7 @@
             <q-card-section class="q-py-md">
               <div class="row items-center q-mb-sm">
                 <div class="text-h6 text-weight-bold q-mr-sm">{{ profileData.user.name }}</div>
-                <q-badge rounded class="active-badge" :label="$t('active')" />
+                <q-badge rounded color="positive" text-color="white" :label="$t('active')" />
               </div>
               <div class="row q-col-gutter-x-md q-mb-sm">
                 <div class="col-auto">
@@ -169,47 +169,59 @@
                 dense
                 borderless
                 v-model="onboardingStatus"
-                :options="['1/5 completed', 'All completed']"
-                class="text-caption"
+                :options="computedOnboardingOptions"
+                class="text-caption text-grey-7"
+                readonly
+                emit-value
+                map-options
+                options-dense
+                style="min-width: 120px;"
                 />
             </div>
-            <q-markup-table flat separator="cell">
-              <thead>
-                <tr>
-                  <th class="text-left"><q-checkbox v-model="selectAllTasks" dense/></th>
-                  <th class="text-left">{{ $t('task') }}</th>
-                  <th class="text-left">{{ $t('assignedTo') }}</th>
-                  <th class="text-left">{{ $t('dueDate') }}</th>
-                  <th class="text-left">{{ $t('attachments') }}</th>
-                  <th class="text-left">{{ $t('actions') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="task in profileData.onboardingTasks" :key="task.id">
-                  <td><q-checkbox v-model="task.completed" dense/></td>
-                  <td class="text-left">{{ task.task }}</td>
-                  <td class="text-left">
-                    <q-chip square dense>
-                      <q-avatar>
-                        <img :src="task.avatar">
+            <!-- Use DataTable component - Removed 'flat' prop -->
+             <DataTable
+              :rows="onboardingTasksRef"
+              :columns="onboardingColumns"
+              row-key="id"
+              :show-edit-action="true"
+              :show-delete-action="true"
+              :inline-edit="false"
+              @edit-row="handleEditTask"
+              @delete-row="handleDeleteTask"
+              class="q-mt-none"
+              bordered
+            >
+               <!-- Temporarily commented out custom slots for debugging -->
+              <!--
+              <template v-slot:body-cell-selection="props">
+                <q-td :props="props" style="width: 50px; text-align: center;">
+                  <q-checkbox v-model="props.row.completed" dense @update:model-value="updateOnboardingStatus"/>
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-assignedTo="props">
+                <q-td :props="props">
+                   <q-chip square dense class="bg-transparent q-pa-none">
+                      <q-avatar size="sm" class="q-mr-sm">
+                        <img :src="props.row.avatar">
                       </q-avatar>
-                      {{ task.assignedTo }}
+                      <span class="text-body2 text-medium-dark">{{ props.row.assignedTo }}</span>
                     </q-chip>
-                  </td>
-                  <td class="text-left">{{ task.dueDate }}</td>
-                  <td class="text-left">
-                    <q-btn v-if="task.attachments" flat dense round size="sm" icon="attach_file" color="primary"/>
-                    <span v-if="task.attachments">{{ task.attachments }}</span>
-                  </td>
-                  <td class="text-left">
-                     <q-btn flat dense round size="sm" icon="edit" color="grey-7" class="q-mr-xs"/>
-                     <q-btn flat dense round size="sm" icon="delete" color="grey-7"/>
-                  </td>
-                </tr>
-              </tbody>
-            </q-markup-table>
-             <q-card-actions align="right">
-               <q-btn unelevated color="primary" :label="$t('addNewTask')" />
+                </q-td>
+              </template>
+
+              <template v-slot:body-cell-attachments="props">
+                 <q-td :props="props">
+                   <q-btn v-if="props.row.attachments" flat dense round size="sm" icon="attach_file" color="primary" class="q-mr-xs"/>
+                    <span v-if="props.row.attachments" class="text-primary cursor-pointer">{{ props.row.attachments }}</span>
+                 </q-td>
+              </template>
+              -->
+
+            </DataTable>
+
+             <q-card-actions align="right" class="q-pt-md">
+               <q-btn unelevated color="primary" :label="$t('addNewTask')" @click="handleAddNewTask" />
              </q-card-actions>
           </q-card-section>
         </q-card>
@@ -220,50 +232,174 @@
 
 <script>
 import profileData from 'src/data/profileData.json'
-import { ref } from 'vue'
+import { ref, computed, watch, getCurrentInstance } from 'vue' // Import getCurrentInstance
+// Remove the direct import of useI18n for Vue 3 style
+// import { useI18n } from 'vue-i18n'
+import DataTable from 'src/components/DataTable.vue' // Import the component
 
 export default {
   name: 'PageIndex',
-  setup () {
+  components: {
+    DataTable // Register the component
+  },
+  setup (props, context) { // Add context argument
+    // Get the i18n instance from the component context for Vue 2 / Quasar v1
+    const { proxy } = getCurrentInstance();
+    const t = proxy.$t.bind(proxy); // Bind t to the proxy instance
+
     const calendarDate = ref('2020/07/24') // Set initial date for calendar
-    const onboardingStatus = ref('1/5 completed')
-    const selectAllTasks = ref(false) // Placeholder logic
+    const onboardingStatus = ref('') // Will be computed
 
-    // Simple logic to update onboarding status based on completed tasks (can be improved)
-    const completedCount = profileData.onboardingTasks.filter(t => t.completed).length;
-    const totalTasks = profileData.onboardingTasks.length;
-    onboardingStatus.value = `${completedCount}/${totalTasks} completed`;
+    // Reactive onboarding tasks (start with data from JSON)
+    const onboardingTasksRef = ref(profileData.onboardingTasks.map((task, index) => ({
+      ...task,
+      id: task.id || `task-${index}` // Ensure unique ID
+     })));
 
+    // Column definition for the onboarding DataTable - Uses computed now
+    const onboardingColumns = computed(() => [
+      // NOTE: Column definition for 'selection' is removed temporarily as the slot is commented out
+      // { name: 'selection', label: '', align: 'center', field: 'selection', style: 'width: 50px', headerStyle: 'width: 50px' },
+      { name: 'task', required: true, label: t('task'), align: 'left', field: 'task', sortable: true },
+      // NOTE: We might need to adjust the 'field' if assignedTo slot is removed, or ensure default rendering works
+      { name: 'assignedTo', required: true, label: t('assignedTo'), align: 'left', field: 'assignedTo', sortable: true },
+      { name: 'dueDate',  required: true, label: t('dueDate'), align: 'left', field: 'dueDate', sortable: true },
+      // NOTE: We might need to adjust the 'field' if attachments slot is removed, or ensure default rendering works
+      { name: 'attachments', required: true, label: t('attachments'), align: 'left', field: 'attachments', sortable: false },
+      // Actions column is added by DataTable component itself
+    ]);
+
+    const updateOnboardingStatus = () => {
+      const totalTasks = onboardingTasksRef.value.length;
+      if (totalTasks === 0) {
+          onboardingStatus.value = '0/0 completed';
+          return;
+      }
+      const completedCount = onboardingTasksRef.value.filter(t => t.completed).length;
+      onboardingStatus.value = `${completedCount}/${totalTasks} completed`;
+    };
+
+    watch(onboardingTasksRef, updateOnboardingStatus, { deep: true, immediate: true });
+
+    const computedOnboardingOptions = computed(() => {
+       return [{ label: onboardingStatus.value, value: onboardingStatus.value }];
+    });
+
+    const handleEditTask = (task) => {
+      console.log('Edit Task:', task);
+      alert(t('edit') + ': ' + task.task);
+    };
+
+    const handleDeleteTask = (task) => {
+      console.log('Delete Task:', task);
+      if (confirm(`${t('delete')} task: "${task.task}"?`)) {
+         const index = onboardingTasksRef.value.findIndex(t => t.id === task.id);
+         if (index !== -1) {
+           onboardingTasksRef.value.splice(index, 1);
+           alert('Task ' + t('delete') + 'd (locally).');
+         }
+      }
+    };
+
+    const handleAddNewTask = () => {
+        console.log('Add new task clicked');
+        alert(t('addNewTask') + '...');
+    };
 
     return {
       profileData,
       calendarDate,
       onboardingStatus,
-      selectAllTasks
+      computedOnboardingOptions,
+      onboardingColumns,
+      onboardingTasksRef,
+      handleEditTask,
+      handleDeleteTask,
+      handleAddNewTask,
+      updateOnboardingStatus,
+      t // Expose t for use in the template if needed
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .bg-page-bg {
-  background-color: #F4F7FC; /* Match variable */
+  background-color: white; /* Changed from #F4F7FC */
 }
 .q-chip {
   border-radius: 4px;
 }
-.q-table th {
-  font-weight: bold;
-  color: #757575; /* text-grey */
-  font-size: 0.75rem;
+
+/* Style for the active badge in profile header */
+.active-badge {
+  // Using quasar color variable name directly if SCSS is enabled
+  background-color: $positive;
+  color: white;
+  font-weight: 500;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  border-radius: 10px; // Make it rounded
 }
-.q-table td {
-   vertical-align: middle;
+
+/* Adjust text colors for better readability */
+.text-light-grey {
+  color: $grey-6;
 }
+.text-medium-dark {
+  color: $grey-8; // Slightly lighter than pure black
+}
+
+/* Specific styles for the onboarding card */
+.onboarding-table .q-card__section {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+/* DataTable specific styles */
+.onboarding-table .q-table__container {
+  /* Removed explicit border setting, let DataTable handle it */
+  /* border: 1px solid $grey-3; */
+  border-radius: 4px;
+}
+
+/* Remove default background from chips within DataTable cells */
 .q-table tbody td .q-chip {
   background-color: transparent !important;
+  padding: 0; // Remove extra padding from chip itself
+  font-weight: normal; // Ensure normal font weight
 }
+
+/* Adjust avatar margin in chip inside table cell */
 .q-table tbody td .q-chip .q-avatar {
-  margin-right: 8px;
+  margin-right: 8px; // Keep some space
 }
+
+/* Ensure checkbox cell has correct width */
+.q-table th[data-name="selection"],
+.q-table td[data-name="selection"] {
+  width: 50px !important;
+  padding-left: 16px !important; // Align checkbox visually
+  padding-right: 16px !important;
+}
+
+/* Adjust action button alignment if needed */
+.q-table td.q-td--actions {
+  text-align: right;
+}
+
+/* Make attachment text look like a link */
+.text-primary.cursor-pointer {
+   text-decoration: none;
+   &:hover {
+     text-decoration: underline;
+   }
+}
+
+/* Style the status dropdown */
+.onboarding-table .q-select {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
 </style>
