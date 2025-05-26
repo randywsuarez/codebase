@@ -1,11 +1,12 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000; // Use environment variable or default to 3000
 
-// Replace with your actual MongoDB connection string
-const uri = "mongodb+srv://<username>:<password>@<your-cluster-url>/<database-name>?retryWrites=true&w=majority";
+// MongoDB connection string from environment variables
+const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
 let db;
