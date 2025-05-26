@@ -1,37 +1,22 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000; // Use environment variable or default to 3000
 
-// MongoDB connection string from environment variables
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
-
-let db;
-
-async function connectToDatabase() {
-    try {
-        await client.connect();
-        db = client.db(); // Replace with your database name if not included in the URI
-        console.log("Connected to MongoDB cluster");
-    } catch (e) {
-        console.error("Failed to connect to MongoDB", e);
-        process.exit(1); // Exit the process if database connection fails
-    }
-}
-
-connectToDatabase();
+// MongoDB connection string for Mongoose
+const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mydatabase';
 
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Simple route to test the database connection
-app.get('/test-db', async (req, res) => {
-    if (!db) {
-        return res.status(500).send('Database not connected');
-    }
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected using Mongoose...'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+// Route to test Mongoose connection (optional, but helpful)
+app.get('/test-mongoose', (req, res) => {
     try {
         // Try to list collections to verify connection
         const collections = await db.listCollections().toArray();
@@ -52,7 +37,7 @@ app.listen(port, () => {
 
 // Close the MongoDB connection when the application is closing
 process.on('SIGINT', async () => {
-    await client.close();
+    await mongoose.connection.close();
     console.log('MongoDB connection closed.');
     process.exit(0);
 });
