@@ -1,0 +1,23 @@
+{
+  "loginNotification": {
+    "title": "New Login Detected",
+    "greeting": "Hello {{firstName}},",
+    "detectionMessage": "We have detected a new login to your account.",
+    "detailsTitle": "Login Details:",
+    "dateTimeLabel": "Date and Time:",
+    "ipAddressLabel": "IP Address:",
+    "deviceLabel": "Browser/Device:",
+    "locationLabel": "Estimated Location:",
+    "ifRecognized": "If you recognize this activity, no action is needed.",
+    "ifNotRecognized": "If you do not recognize this login or believe your account may be compromised, please take the following actions immediately:",
+    "actionChangePassword": "Change your password.",
+    "actionReviewActivity": "Review recent account activity.",
+    "actionContactSupport": "Contact our support team if you need assistance.",
+    "buttonChangePassword": "Change Password",
+    "securityRecommendation": "For your security, we recommend enabling two-factor authentication for enhanced account protection.",
+    "closing": "Regards,",
+    "teamSignature": "The {{appName}} Team",
+    "automatedMessage": "This is an automated message, please do not reply to this email.",
+    "copyright": "© {{year}} {{appName}}. All rights reserved."
+  }
+}
